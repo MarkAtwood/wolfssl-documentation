@@ -1,0 +1,34 @@
+site_name: wolfCrypt JCE Provider and JNI Manual
+site_url: https://wolfssl.com/
+docs_dir: build/html/
+site_dir: html/
+copyright: wolfSSL Inc. 2024
+nav:
+    - "1. Introduction": index.md
+    - "2. Requirements": chapter02.md
+    - "3. Compilation": chapter03.md
+    - "4. Installation": chapter04.md
+    - "5. Package Design": chapter05.md
+    - "6. Supported Algorithms and Classes": chapter06.md
+    - "7. JAR Code Signing": chapter07.md
+    - "8. Usage": chapter08.md
+    - "9. KeyStore Implementations": chapter09.md
+theme:
+  name: null
+  custom_dir: ../mkdocs-material/material
+  language: en
+  palette:
+    primary: indigo
+    accent: indigo
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon: "logo.png"
+  logo: logo.png
+  favicon: logo.png
+  feature:
+    tabs: true
+extra_css: [skin.css]
+extra:
+    generator: false
+use_directory_urls: false

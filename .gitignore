@@ -1,0 +1,15 @@
+html/
+*.pdf
+build/
+
+wolfMQTT/api/
+wolfMQTT/wolfmqtt/
+wolfSSL/api/
+wolfSSL/wolfssl/
+wolfTPM/api/
+wolfTPM/wolftpm/
+wolfHSM/api
+wolfHSM/docs/xml
+
+# Exclude Visual Studio Debris
+**/.vs

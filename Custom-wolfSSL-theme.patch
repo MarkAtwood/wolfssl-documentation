@@ -1,0 +1,53 @@
+From 91c5005cc88851deda2f393fe37b2b5ffbc66ccb Mon Sep 17 00:00:00 2001
+From: Lealem Amedie <lealemta47@gmail.com>
+Date: Wed, 6 Apr 2022 13:23:44 -0700
+Subject: [PATCH 1/1] Adding wolfSSL link and google analytics
+
+---
+ material/base.html            | 9 +++++++++
+ material/partials/header.html | 9 +++++++++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/material/base.html b/material/base.html
+index be0a8c88e..1c1380746 100644
+--- a/material/base.html
++++ b/material/base.html
+@@ -67,6 +67,15 @@
+       {% include "partials/integrations/analytics.html" %}
+     {% endblock %}
+     {% block extrahead %}{% endblock %}
++    <!-- Global site tag (gtag.js) - Google Analytics -->
++     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-64826966-1"></script>
++     <script>
++       window.dataLayer = window.dataLayer || [];
++       function gtag(){dataLayer.push(arguments);}
++       gtag('js', new Date());
++     
++       gtag('config', 'UA-64826966-1');
++     </script>
+   </head>
+   {% set direction = config.theme.direction or lang.t('direction') %}
+   {% if config.theme.palette %}
+diff --git a/material/partials/header.html b/material/partials/header.html
+index 4872af867..449bf03a4 100644
+--- a/material/partials/header.html
++++ b/material/partials/header.html
+@@ -66,6 +66,15 @@
+         </div>
+       </div>
+     {% endif %}
++     <div class="md-ellipsis-nav">
++            <a href="https://www.wolfssl.com/">Home</a>
++            <a href="https://www.wolfssl.com/products/">Products</a>
++            <a href="https://www.wolfssl.com/download/">Download</a>
++            <a href="https://www.wolfssl.com/license/">License</a>
++            <a href="https://www.wolfssl.com/docs/">Docs</a>
++            <a href="https://www.wolfssl.com/contact/">Contact</a>
++      </div>
++
+     {% if "search" in config["plugins"] %}
+       <label class="md-header__button md-icon" for="__search">
+         {% include ".icons/material/magnify.svg" %}
+-- 
+2.25.1
+

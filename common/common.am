@@ -1,0 +1,87 @@
+# vim: ft=automake
+
+Q?=@
+ifeq ($(V),1)
+  Q=
+endif
+
+HTML = html/
+
+ifeq ($(DOC_LANG),JA)
+    PATCH  = ../Custom-wolfSSL-theme-JA.patch
+    SRC    = src-ja
+    MKDOC  = mkdocs-ja.yml
+	CJK    = --variable CJKmainfont="Noto Sans CJK JP"
+else
+    PATCH  = ../Custom-wolfSSL-theme.patch
+    SRC    = src
+    MKDOC  = mkdocs.yml
+	CJK    =
+endif
+
+.PHONY: builddir
+builddir:
+	$(Q)mkdir -p build/pdf
+	$(Q)mkdir -p build/html
+
+.PHONY: html-setup
+html-setup:
+	$(Q)git submodule update --init
+	-cd ../mkdocs-material; patch -p1 < $(PATCH) --ignore-whitespace -N
+	$(Q)cp -a $(SRC)/* build/html/
+	$(Q)cp ../common/*.png build/html/
+	$(Q)cp ../common/*.css build/html/
+	$(Q)perl -i -pe 's/    ```/```/g' build/html/*.md
+	$(Q)perl -i -pe "s/\#--/\#-/g" build/html/*.md
+	$(Q)mv build/html/$(word 1,$(SOURCES)) build/html/index.md
+
+.PHONY: html
+html: builddir html-setup html-prep
+	$(Q)mkdir -p html
+	$(Q)mkdocs build -f $(MKDOC)
+
+.PHONY: pdf-setup
+pdf-setup: builddir
+	$(Q)cp -a $(SRC)/* build/pdf/
+	$(Q)cp ../common/*.png build/pdf/
+	$(Q)perl -i -pe "s/chapter[0-9][0-9].md|appendix[0-9][0-9].md//g" build/pdf/*.md
+	$(Q)perl -i -pe "s/\#--/\#/g" build/pdf/*.md
+
+.PHONY: pdf
+pdf: pdf-setup pdf-prep
+	$(Q)cd build/pdf && pandoc \
+		-N \
+		-s \
+		--metadata date="`date -I`" \
+		--variable mainfont="Noto Sans" \
+		--variable sansfont="Noto Sans" \
+		--variable monofont="Noto Sans Mono" \
+		$(CJK) \
+		--variable papersize=letter \
+		--variable geometry="margin=2.5cm" \
+		--variable version=2.0 \
+		--variable colorlinks=true \
+		../../header.txt $(SOURCES) ../../../common/appendix_head.txt $(APPENDIX) \
+		--pdf-engine=xelatex \
+		--toc \
+		-o ../../$(PDF)
+
+.PHONY: serve
+serve: builddir html-setup html-prep
+	$(Q)mkdocs serve
+
+.PHONY: linkcheck
+linkcheck:
+	$(Q)$(foreach source_md,$(SOURCES),docker run -v ${CURDIR}:/tmp:ro --rm -i ghcr.io/tcort/markdown-link-check:stable --config /tmp/test/linkcheck.json /tmp/src/$(source_md) || exit;)
+	$(Q)$(foreach source_md,$(APPENDIX),docker run -v ${CURDIR}:/tmp:ro --rm -i ghcr.io/tcort/markdown-link-check:stable --config /tmp/test/linkcheck.json /tmp/src/$(source_md) || exit;)
+
+.PHONY: lintcheck
+lintcheck:
+	$(Q)docker run -i --rm -v  ${CURDIR}:/work tmknom/markdownlint -c /work/test/lintcheck.json /work/src
+
+.PHONY: test
+test: lintcheck linkcheck
+
+CLEAN_FILES = $(PDF) build $(HTML)
+clean:
+	rm -rf $(CLEAN_FILES)

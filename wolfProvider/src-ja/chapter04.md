@@ -1,0 +1,18 @@
+# FIPS 140-2のサポート
+
+wolfProviderは、FIPSで検証されたバージョンのwolfCryptに対して適切にコンパイルされた場合にのみ、FIPS140-2に対応した動作を行うよう設計しています。
+この使用シナリオには、wolfSSL Inc. から入手した、適切にライセンスされ、検証されたバージョンのwolfCryptが必要です。
+
+wolfCrypt FIPSライブラリは、非FIPSモードに「切り替える」ことができません。
+通常の非FIPS版wolfCryptとFIPS版wolfCryptは、それぞれ別々のソースコードパッケージで提供しています。
+
+wolfProviderをFIPS版wolfCryptを使用するようにコンパイルすると、
+FIPSで検証されたアルゴリズム、モード、および鍵サイズのサポートおよび登録エンジンコールバックのみが含まれます。
+OpenSSLベースのアプリケーションがFIPS検証が行われていないアルゴリズムを呼び出す場合、実行はwolfProviderに入らず、
+OpenSSL構成に基づいて、デフォルトのOpenSSLエンジンまたは他の登録済みエンジンプロバイダーによって処理される可能性があります。
+
+**注**:wolfCrypt以外に実装されたFIPSアルゴリズムを別のプロバイダーから呼び出す場合、
+それらのアルゴリズムはwolfProviderおよびFIPS版wolfCryptのスコープに含みません。
+FIPS認証取得に際し、問題となる可能性があります。
+
+FIPS版wolfCrypt(140-2/140-3)の使用に関する詳細については、wolfSSL(info@wolfssl.jp)までお問い合わせください。
