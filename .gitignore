@@ -13,3 +13,9 @@ wolfHSM/docs/xml
 
 # Exclude Visual Studio Debris
 **/.vs
+
+# AI tool local files
+.claude/
+.aider*
+.cursor/
+*.bak
